@@ -128,7 +128,7 @@ class KPI:
                 }
             ).execute()
 
-    def get_landing_page(self, platform='gccollab'):
+    def get_top_landing_page(self, platform='gccollab'):
         return self.analytics.reports().batchGet(
             body={
                 'reportRequests': [
@@ -153,7 +153,7 @@ class KPI:
                           "name": "ga:LandingPagePath"
                         }
                       ],
-                      "pageSize": 3,
+                      "pageSize": 3, #change this to increase number of pages returned
                       "orderBys": [
                         {
                           "fieldName": "ga:entrances",
@@ -164,3 +164,41 @@ class KPI:
                   ]
                 }
             ).execute()
+
+    def get_top_exit_page(self, platform='gccollab'):
+        return self.analytics.reports().batchGet(
+            body={
+                'reportRequests': [
+                    {
+                      "viewId": self.get_id(platform),
+                      "dateRanges": [
+                        {
+                          "startDate": "30daysAgo",
+                          "endDate": "yesterday"
+                        }
+                      ],
+                      "metrics": [
+                        {
+                          "expression": "ga:exits"
+                        },
+                        {
+                          "expression": "ga:pageviews"
+                        }
+                      ],
+                      "dimensions": [
+                        {
+                          "name": "ga:exitPagePath"
+                        }
+                      ],
+                      "pageSize": 3, #change this to increase number of pages returned
+                      "orderBys": [
+                        {
+                          "fieldName": "ga:exits",
+                          "sortOrder": "DESCENDING"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            ).execute()
+
